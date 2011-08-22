@@ -1,26 +1,22 @@
 # -*- coding: utf-8 -*-
 
-class UpdateItObject(object):
-    def __init__(self, element):
+class DictUpdateWatcher(object):
+    def __init__(self, dict_):
         self._changed = []
-        if isinstance(element, dict):
-            for key, value in element.iteritems():
-                setattr(self, key, UpdateItObject(value))
+        if isinstance(dict_, dict):
+            for key, value in dict_.iteritems():
+                if isinstance(value, dict):
+                    setattr(self, key, DictUpdateWatcher(value))
+                else:
+                    setattr(self, key, value)
             self._value = None
-            self._leaf = False
-        elif isinstance(element, (list, tuple)):
-            self._value = [UpdateItObject(x) for x in element]
-            self._leaf = False
+            self._changed = []
         else:
-            self._value = element
-            self._leaf = True
-        self._changed = []
+            raise Exception("Dict object required")
+        
     
     def __getattribute__(self, name):
         element = object.__getattribute__(self, name)
-        if isinstance(element, UpdateItObject):
-            if element._leaf:
-                return element._value
         return element
 
     def __setattr__(self, key, value):
@@ -39,7 +35,7 @@ class UpdateItObject(object):
                 pwd_current = "%s.%s" % (pwd,key)
             else:
                 pwd_current = key
-            if isinstance(value, UpdateItObject):
+            if isinstance(value, DictUpdateWatcher):
                 if len(value._changed) > 0:
                     for changed_element in value._changed:
                         list_.append("%s.%s" % (pwd_current, changed_element))

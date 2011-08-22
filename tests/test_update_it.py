@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from update_it_object import UpdateItObject
+from update_it_object import DictUpdateWatcher
 
 
-class TestUpdateIt(unittest.TestCase):
+class TestDictUpdateWatcher(unittest.TestCase):
     def setUp(self):
         self.dict = {
             "info":
@@ -12,13 +12,13 @@ class TestUpdateIt(unittest.TestCase):
                 "doi": "10.1056/NEJM199803263381303",
                 "classification": "primary-study",
                 "author": [
-                "SE. Inzucchi",
-                "DG. Maggs",
-                "GR. Spollett",
-                "SL. Page",
-                "FS. Rife",
-                "V. Walton",
-                "GI. Shulman"
+                    "SE. Inzucchi",
+                    "DG. Maggs",
+                    "GR. Spollett",
+                    "SL. Page",
+                    "FS. Rife",
+                    "V. Walton",
+                    "GI. Shulman"
                 ],
                 "strategy": None,
                 "source": "PubMed",
@@ -27,10 +27,15 @@ class TestUpdateIt(unittest.TestCase):
                 "date": None,
                 "type": "http://purl.org/ontology/bibo/Document"
             },
+            "languages": {
+                "en": {
+                    "title": "Efficacy and Metabolic Effects of Metformin and Troglitazone in Type II Diabetes Mellitus"
+                }
+            },
             "modified": 1308190099,
             "id": "123"
         }
-        self.document = UpdateItObject(self.dict)
+        self.document = DictUpdateWatcher(self.dict)
 
     def test_load_from_json(self):
         self.assertEqual(self.dict['info']['classification'], self.document.info.classification)
@@ -49,6 +54,10 @@ class TestUpdateIt(unittest.TestCase):
     
     def test_get_inexistence_field(self):
         self.assertEqual(None, self.document.get('info.no_existe'))
+    
+    def test_list(self):
+        for i in range(0, len(self.document.info.author)):
+            self.assertEqual(self.dict["info"]["author"][i], self.document.info.author[i])
 
 
 
