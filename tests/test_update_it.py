@@ -58,7 +58,10 @@ class TestDictUpdateWatcher(unittest.TestCase):
     def test_list(self):
         for i in range(0, len(self.document.info.author)):
             self.assertEqual(self.dict["info"]["author"][i], self.document.info.author[i])
-
+    
+    def test_get_dict(self):
+        self.maxDiff = None
+        self.assertEqual(self.dict['languages']['en'],self.document.languages.en.get_dict())
 
 
 

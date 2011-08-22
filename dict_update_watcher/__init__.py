@@ -51,5 +51,11 @@ class DictUpdateWatcher(object):
                 to_return_value = to_return_value.__getattribute__(field)
             return to_return_value
         except:
+            
             return None
     
+    def get_dict(self):
+        dict_ = self.__dict__
+        del dict_['_value']
+        del dict_['_changed']
+        return dict_
