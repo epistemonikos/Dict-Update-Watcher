@@ -55,6 +55,9 @@ class TestDictUpdateWatcher(unittest.TestCase):
     def test_get_inexistence_field(self):
         self.assertEqual(None, self.document.get('info.no_existe'))
     
+    def test_get_default_value(self):
+        self.assertEqual('default_value', self.document.get('info.no_existe', 'default_value'))
+    
     def test_list(self):
         for i in range(0, len(self.document.info.author)):
             self.assertEqual(self.dict["info"]["author"][i], self.document.info.author[i])
@@ -62,6 +65,14 @@ class TestDictUpdateWatcher(unittest.TestCase):
     def test_get_dict(self):
         self.maxDiff = None
         self.assertEqual(self.dict['languages']['en'],self.document.languages.en.get_dict())
+
+    def test_get_keys(self):
+        self.maxDiff = None
+        self.assertEqual(['info', 'languages', 'modified', 'id'],self.document.keys())
+
+    def test_correct_implementation_of_compare(self):
+        document2 = DictUpdateWatcher(self.dict)
+        self.assertEqual(self.document, document2)
 
 
 

@@ -43,7 +43,7 @@ class DictUpdateWatcher(object):
                     list_.extend(value.updated_fields(pwd_current))
         return list_
     
-    def get(self, name):
+    def get(self, name, default = None):
         fields = name.split('.')
         to_return_value = self
         try:
@@ -51,11 +51,34 @@ class DictUpdateWatcher(object):
                 to_return_value = to_return_value.__getattribute__(field)
             return to_return_value
         except:
-            
-            return None
+            return default
     
     def get_dict(self):
         dict_ = self.__dict__
         del dict_['_value']
         del dict_['_changed']
         return dict_
+
+    def keys(self):
+        return self.get_dict().keys()
+    
+    def values(self):
+        return self.get_dict().values()
+
+    def __cmp__(self, other):
+        if not isinstance(other, DictUpdateWatcher):
+            return 1
+        dict_self = self.__dict__
+        dict_other = other.__dict__
+        dict_self_keys = dict_self.keys().sort()
+        dict_other_keys = dict_other.keys().sort()
+        if dict_self_keys != dict_other_keys:
+            return 1
+        current_cmp_result = 0
+        for key, value in dict_self.iteritems():
+            # print key, value, dict_other.get(key, None)
+            round_value = 1
+            if dict_other.get(key, {}) == value:
+                round_value = 0
+            current_cmp_result += round_value
+        return current_cmp_result
