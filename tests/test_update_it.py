@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from update_it_object import DictUpdateWatcher
+from dict_update_watcher import DictUpdateWatcher
 
 
 class TestDictUpdateWatcher(unittest.TestCase):

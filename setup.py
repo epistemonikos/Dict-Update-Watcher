@@ -3,7 +3,7 @@ import sys, os
 
 version = '0.0'
 
-setup(name='update_it_object',
+setup(name='dict_update_watcher',
       version=version,
       description="",
       long_description="""\
