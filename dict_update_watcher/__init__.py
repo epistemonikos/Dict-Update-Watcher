@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 class DictUpdateWatcher(object):
-    def __init__(self, dict_):
+    def __init__(self, dict_ = {}):
         self._changed = []
         if isinstance(dict_, dict):
             for key, value in dict_.iteritems():
