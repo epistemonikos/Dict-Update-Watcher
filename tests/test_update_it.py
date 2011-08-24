@@ -6,6 +6,7 @@ from dict_update_watcher import DictUpdateWatcher
 
 class TestDictUpdateWatcher(unittest.TestCase):
     def setUp(self):
+        self.maxDiff = None
         self.dict = {
             "info":
             {
@@ -63,17 +64,37 @@ class TestDictUpdateWatcher(unittest.TestCase):
             self.assertEqual(self.dict["info"]["author"][i], self.document.info.author[i])
     
     def test_get_dict(self):
-        self.maxDiff = None
+        #Testear cuando no tiene dict
         self.assertEqual(self.dict['languages']['en'],self.document.languages.en.get_dict())
 
     def test_get_keys(self):
-        self.maxDiff = None
-        self.assertEqual(['info', 'languages', 'modified', 'id'],self.document.keys())
+        received_keys = self.document.keys()
+        received_keys.sort()
+        self.assertEqual(['id', 'info', 'languages', 'modified'],received_keys)
 
     def test_correct_implementation_of_compare(self):
+        #TODO revisar
         document2 = DictUpdateWatcher(self.dict)
         self.assertEqual(self.document, document2)
+    
+    def test_get_dict_recursive(self):
+        #Testear cuando no tiene dict
+        document2 = DictUpdateWatcher(self.dict)
+        self.assertEqual(self.dict, self.document.get_dict(recursive = True))
 
+    def test_inherit_class_changed(self):
+        class Example(DictUpdateWatcher):pass
+        ex = Example({"daniel": {"saludo": "hola"}})
+        ex.daniel.saludo = "chao"
+        self.assertEqual(['daniel.saludo'], ex.updated_fields())
+        
+    def test_get_dict_recursive_not_clear_the_modified_elements(self):
+        self.document.info.classification = 'systematic-review'
+        self.assertEqual(['info.classification'],self.document.updated_fields())
+        self.document.get_dict(True)
+        self.assertEqual(['info.classification'],self.document.updated_fields())
+
+        
 
 
 if __name__ == '__main__':

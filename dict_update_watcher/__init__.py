@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 
 class DictUpdateWatcher(object):
     def __init__(self, dict_ = {}):
@@ -53,10 +54,22 @@ class DictUpdateWatcher(object):
         except:
             return default
     
-    def get_dict(self):
-        dict_ = self.__dict__
-        del dict_['_value']
-        del dict_['_changed']
+    def get_dict(self, recursive = False):
+        dict_ = copy.deepcopy(self.__dict__)
+        try:
+            del dict_['_value']
+        except:
+            pass
+        try:
+            del dict_['_changed']
+        except:
+            pass
+        if recursive:
+            for key, value in dict_.iteritems():
+                if isinstance(value, DictUpdateWatcher):
+                    dict_[key] = value.get_dict(recursive)
+                else:
+                    dict_[key] = value
         return dict_
 
     def keys(self):
@@ -76,7 +89,6 @@ class DictUpdateWatcher(object):
             return 1
         current_cmp_result = 0
         for key, value in dict_self.iteritems():
-            # print key, value, dict_other.get(key, None)
             round_value = 1
             if dict_other.get(key, {}) == value:
                 round_value = 0
