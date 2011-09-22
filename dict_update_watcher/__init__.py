@@ -54,6 +54,10 @@ class DictUpdateWatcher(object):
         except:
             return default
     
+    def set(self, name, value):
+        self.__setattr__(name, value)
+        
+    
     def get_dict(self, recursive = False):
         dict_ = copy.deepcopy(self.__dict__)
         try:
