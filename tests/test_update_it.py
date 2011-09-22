@@ -50,6 +50,12 @@ class TestDictUpdateWatcher(unittest.TestCase):
         self.document.info.classification = 'systematic-review'
         self.assertEqual(['info.classification'],self.document.updated_fields())
 
+    def test_updated_fields_three_levels(self):
+        self.assertEqual([], self.document.updated_fields())
+        self.document.languages.es = {'title': 'title'}
+        self.document.languages.en.copyright = 'systematic-review'
+        self.assertEqual(['languages.es', 'languages.en.copyright'], self.document.updated_fields())
+
     def test_select_field(self):
         self.assertEqual('primary-study', self.document.get('info.classification'))
     

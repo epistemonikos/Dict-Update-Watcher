@@ -40,9 +40,12 @@ class DictUpdateWatcher(object):
                 if len(value._changed) > 0:
                     for changed_element in value._changed:
                         list_.append("%s.%s" % (pwd_current, changed_element))
+                    for not_changed_element in value.__dict__:
+                        if pwd not in value._changed:
+                            list_.extend(value.updated_fields(pwd_current))
                 else:
                     list_.extend(value.updated_fields(pwd_current))
-        return list_
+        return list(set(list_))
     
     def get(self, name, default = None):
         fields = name.split('.')
