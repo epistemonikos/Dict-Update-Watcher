@@ -28,6 +28,7 @@ class DictUpdateWatcher(object):
         self._changed.append(key)
     
     def updated_fields(self, pwd = None):
+        #TODO: refactor
         list_ = []
         for key, value in self.__dict__.iteritems():
             if key == '_changed':
@@ -41,8 +42,11 @@ class DictUpdateWatcher(object):
                     for changed_element in value._changed:
                         list_.append("%s.%s" % (pwd_current, changed_element))
                     for not_changed_element in value.__dict__:
-                        if pwd not in value._changed:
-                            list_.extend(value.updated_fields(pwd_current))
+                        # if pwd not in map(lambda x: '%s.%s' % (pwd, x), self._changed):
+                        received_values = value.updated_fields(pwd_current)
+                        for received_value in received_values:
+                            if len(received_value.split('.')) > 1 and received_value.split('.')[-2] not in value._changed:
+                                list_.append(received_value)                        
                 else:
                     list_.extend(value.updated_fields(pwd_current))
         return list(set(list_))
