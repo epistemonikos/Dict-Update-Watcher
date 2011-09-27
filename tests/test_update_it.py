@@ -100,7 +100,33 @@ class TestDictUpdateWatcher(unittest.TestCase):
         self.assertEqual(['info.classification'],self.document.updated_fields())
         self.document.get_dict(True)
         self.assertEqual(['info.classification'],self.document.updated_fields())
+        
+    def test_inherit_class_changed_including_base(self):
+        class Example(DictUpdateWatcher):
+            def __init__(self, dict_):
+                super(Example, self).__init__(dict_)
+        ex = Example(self.dict)
+        ex.daniel = "chao"
+        ex.languages.es = 'es'
+        ex.languages.en.nuevo = 'nuevo'
+        ex.relations = 'relations'
+        received_update = ex.updated_fields()
+        received_update.sort()
+        self.assertEqual(['daniel', 'languages.en.nuevo', 'languages.es', 'relations'], received_update)
 
+    def test_inherit_class_changed_with_omit_elements(self):
+        class Example(DictUpdateWatcher):
+            def __init__(self, dict_):
+                super(Example, self).__init__(dict_)
+                self._omit = ['languages.en', 'daniel']
+        ex = Example(self.dict)
+        ex.daniel = "chao"
+        ex.languages.es = 'es'
+        ex.languages.en.nuevo = 'nuevo'
+        ex.relations = 'relations'
+        received_update = ex.updated_fields()
+        received_update.sort()
+        self.assertEqual(['languages.es', 'relations'], received_update)
         
 
 
