@@ -3,3 +3,6 @@ dict_update_watcher.egg-info
 .project
 .pydevproject
 .settings/
+.coverage
+coverage.xml
+nosetests.xml
