@@ -90,7 +90,16 @@ class DictUpdateWatcher(object):
             return default
     
     def set(self, name, value):
-        self.__setattr__(name, value)
+        name_splited = name.split('.')
+        element = self
+        for i, name_part in enumerate(name_splited):
+            if i == len(name_splited)-1:
+                break
+            child = element.get(name_part)
+            if not child:
+                element.set(name_part, DictUpdateWatcher())
+            element = element.get(name_part)
+        element.__setattr__(name_splited[-1], value)
         
     
     def get_dict(self, recursive = False):

@@ -127,8 +127,18 @@ class TestDictUpdateWatcher(unittest.TestCase):
         received_update = ex.updated_fields()
         received_update.sort()
         self.assertEqual(['languages.es', 'relations'], received_update)
-        
 
+    def test_set_dict_inline(self):
+        self.document.set('info.classification', 'overview')
+        self.assertEqual('overview', self.document.info.classification)
+
+    def test_set_dict_with_unexistent_elements(self):
+        self.document.set('otra.saludo', 'hola')
+        self.assertEqual('hola', self.document.otra.saludo)
+
+    def test_set_dict_one_element(self):
+        self.document.set('saludo', 'hola')
+        self.assertEqual('hola', self.document.saludo)
 
 if __name__ == '__main__':
     unittest.main()
