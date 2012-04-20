@@ -139,6 +139,11 @@ class TestDictUpdateWatcher(unittest.TestCase):
     def test_set_dict_one_element(self):
         self.document.set('saludo', 'hola')
         self.assertEqual('hola', self.document.saludo)
+    
+    def test_get_element_empty_with_default_value(self):
+        self.document.set('probando', None)
+        self.assertEqual({}, self.document.get('probando', {}))
+        
 
 if __name__ == '__main__':
     unittest.main()

@@ -85,6 +85,8 @@ class DictUpdateWatcher(object):
         try:
             for field in fields:
                 to_return_value = to_return_value.__getattribute__(field)
+            if to_return_value is None and default is not None:
+                return default
             return to_return_value
         except:
             return default
