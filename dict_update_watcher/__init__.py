@@ -4,7 +4,7 @@ import copy
 class DictUpdateWatcher(object):
     def __init__(self, dict_ = {}):
         self._changed = []
-        self._omit = []
+        self._ommit = []
         if isinstance(dict_, dict):
             for key, value in dict_.iteritems():
                 if isinstance(value, dict):
@@ -28,23 +28,23 @@ class DictUpdateWatcher(object):
         self.__dict__[key] = value
         self._changed.append(key)
     
-    def updated_fields(self, pwd = None, omit = None):
-        if not omit:
-            omit = self._omit
+    def updated_fields(self, pwd = None, ommit = None):
+        if not ommit:
+            ommit = self._ommit
         #TODO: refactor
-        omit_dict = {}
-        for o in omit:
-            omit_split = o.split('.')
-            if not omit_dict.get(omit_split[0]):
-                omit_dict[omit_split[0]] = []
-            to_insert_value = ".".join(omit_split[1:])
+        ommit_dict = {}
+        for o in ommit:
+            ommit_split = o.split('.')
+            if not ommit_dict.get(ommit_split[0]):
+                ommit_dict[ommit_split[0]] = []
+            to_insert_value = ".".join(ommit_split[1:])
             if to_insert_value:
-                omit_dict[omit_split[0]].append(to_insert_value)
+                ommit_dict[ommit_split[0]].append(to_insert_value)
         list_ = []
         for key, value in self.__dict__.iteritems():
-            if key in omit_dict and omit_dict[key] == []:
+            if key in ommit_dict and ommit_dict[key] == []:
                 continue
-            if key == '_changed' or key == '_omit':
+            if key == '_changed' or key == '_ommit':
                 continue
             if pwd:
                 pwd_current = "%s.%s" % (pwd,key)
@@ -56,16 +56,16 @@ class DictUpdateWatcher(object):
                         list_.append("%s.%s" % (pwd_current, changed_element))
                     for not_changed_element in value.__dict__:
                         # if pwd not in map(lambda x: '%s.%s' % (pwd, x), self._changed):
-                        if key in omit_dict:
-                            received_values = value.updated_fields(pwd_current, omit = omit_dict[key])
+                        if key in ommit_dict:
+                            received_values = value.updated_fields(pwd_current, ommit = ommit_dict[key])
                         else:
                             received_values = value.updated_fields(pwd_current)
                         for received_value in received_values:
                             if len(received_value.split('.')) > 1 and received_value.split('.')[-2] not in value._changed:
                                 list_.append(received_value)                    
                 else:
-                    if key in omit_dict:
-                        list_.extend(value.updated_fields(pwd_current, omit = omit_dict[key]))
+                    if key in ommit_dict:
+                        list_.extend(value.updated_fields(pwd_current, ommit = ommit_dict[key]))
                     else:
                         list_.extend(value.updated_fields(pwd_current))
                     list_.extend(value.updated_fields(pwd_current))
@@ -115,7 +115,7 @@ class DictUpdateWatcher(object):
         except:
             pass
         try:
-            del dict_['_omit']
+            del dict_['_ommit']
         except:
             pass
         if recursive:
