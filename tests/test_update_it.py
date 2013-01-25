@@ -143,6 +143,16 @@ class TestDictUpdateWatcher(unittest.TestCase):
     def test_get_element_empty_with_default_value(self):
         self.document.set('probando', None)
         self.assertEqual({}, self.document.get('probando', {}))
+
+    def test_delete_field(self):
+        del self.document.info.classification
+        self.assertIn('info.classification', self.document.updated_fields())
+        self.assertIsNone(self.document.get('info.classification'))
+
+    def test_delete_field_like_dict(self):
+        self.document.info.unset('classification')
+        self.assertIn('info.classification', self.document.updated_fields())
+        self.assertIsNone(self.document.get('info.classification'))
         
 
 if __name__ == '__main__':

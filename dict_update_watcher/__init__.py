@@ -27,6 +27,11 @@ class DictUpdateWatcher(object):
             return None
         self.__dict__[key] = value
         self._changed.append(key)
+
+    def __delattr__(self, key):
+        # self.__dict__.__delattr__(key)
+        del self.__dict__[key]
+        self._changed.append(key)
     
     def updated_fields(self, pwd = None, ommit = None):
         if not ommit:
@@ -102,7 +107,18 @@ class DictUpdateWatcher(object):
                 element.set(name_part, DictUpdateWatcher())
             element = element.get(name_part)
         element.__setattr__(name_splited[-1], value)
-        
+
+    def unset(self, name):
+        name_splited = name.split('.')
+        element = self
+        for i, name_part in enumerate(name_splited):
+            if i == len(name_splited)-1:
+                break
+            child = element.get(name_part)
+            if not child:
+                element.unset(name_part)
+            element = element.get(name_part)
+        element.__delattr__(name_splited[-1])
     
     def get_dict(self, recursive = False):
         dict_ = copy.deepcopy(self.__dict__)
