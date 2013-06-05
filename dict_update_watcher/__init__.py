@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import copy
+import pprint
+
 
 class DictUpdateWatcher(object):
-    def __init__(self, dict_ = {}):
+    def __init__(self, dict_={}):
         self._changed = []
         self._ommit = []
         if isinstance(dict_, dict):
@@ -15,8 +17,7 @@ class DictUpdateWatcher(object):
             self._changed = []
         else:
             raise Exception("Dict object required")
-        
-    
+
     def __getattribute__(self, name):
         element = object.__getattribute__(self, name)
         return element
@@ -32,8 +33,11 @@ class DictUpdateWatcher(object):
         # self.__dict__.__delattr__(key)
         del self.__dict__[key]
         self._changed.append(key)
-    
-    def updated_fields(self, pwd = None, ommit = None):
+
+    def __repr__(self):
+        return pprint.pformat(self.get_dict(recursive=True))
+
+    def updated_fields(self, pwd=None, ommit=None):
         if not ommit:
             ommit = self._ommit
         #TODO: refactor
@@ -52,7 +56,7 @@ class DictUpdateWatcher(object):
             if key == '_changed' or key == '_ommit':
                 continue
             if pwd:
-                pwd_current = "%s.%s" % (pwd,key)
+                pwd_current = "%s.%s" % (pwd, key)
             else:
                 pwd_current = key
             if isinstance(value, DictUpdateWatcher):
@@ -62,15 +66,15 @@ class DictUpdateWatcher(object):
                     for not_changed_element in value.__dict__:
                         # if pwd not in map(lambda x: '%s.%s' % (pwd, x), self._changed):
                         if key in ommit_dict:
-                            received_values = value.updated_fields(pwd_current, ommit = ommit_dict[key])
+                            received_values = value.updated_fields(pwd_current, ommit=ommit_dict[key])
                         else:
                             received_values = value.updated_fields(pwd_current)
                         for received_value in received_values:
                             if len(received_value.split('.')) > 1 and received_value.split('.')[-2] not in value._changed:
-                                list_.append(received_value)                    
+                                list_.append(received_value)
                 else:
                     if key in ommit_dict:
-                        list_.extend(value.updated_fields(pwd_current, ommit = ommit_dict[key]))
+                        list_.extend(value.updated_fields(pwd_current, ommit=ommit_dict[key]))
                     else:
                         list_.extend(value.updated_fields(pwd_current))
                     list_.extend(value.updated_fields(pwd_current))
@@ -80,11 +84,9 @@ class DictUpdateWatcher(object):
                         list_.append("%s.%s" % (pwd, key))
                     else:
                         list_.append("%s" % key)
-                
-                
         return list(set(list_))
-    
-    def get(self, name, default = None):
+
+    def get(self, name, default=None):
         fields = name.split('.')
         to_return_value = self
         try:
@@ -95,7 +97,7 @@ class DictUpdateWatcher(object):
             return to_return_value
         except:
             return default
-    
+
     def set(self, name, value):
         name_splited = name.split('.')
         element = self
@@ -119,8 +121,8 @@ class DictUpdateWatcher(object):
                 element.unset(name_part)
             element = element.get(name_part)
         element.__delattr__(name_splited[-1])
-    
-    def get_dict(self, recursive = False):
+
+    def get_dict(self, recursive=False):
         dict_ = copy.deepcopy(self.__dict__)
         try:
             del dict_['_value']
@@ -144,7 +146,7 @@ class DictUpdateWatcher(object):
 
     def keys(self):
         return self.get_dict().keys()
-    
+
     def values(self):
         return self.get_dict().values()
 
