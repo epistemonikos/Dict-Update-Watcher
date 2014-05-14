@@ -4,7 +4,8 @@ import pprint
 
 
 class DictUpdateWatcher(object):
-    def __init__(self, dict_={}):
+    def __init__(self, dict_=None):
+        dict_ = dict_ or {}
         self._changed = []
         self._ommit = []
         if isinstance(dict_, dict):
