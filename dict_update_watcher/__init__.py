@@ -122,7 +122,7 @@ class DictUpdateWatcher(object):
             element = element.get(name_part)
         element.__delattr__(name_splited[-1])
 
-    def get_dict(self, recursive=False):
+    def get_dict(self, recursive=True):
         dict_ = copy.deepcopy(self.__dict__)
         try:
             del dict_['_value']
