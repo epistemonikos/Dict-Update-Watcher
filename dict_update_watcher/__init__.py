@@ -23,11 +23,9 @@ class DictUpdateWatcher(object):
         return element
 
     def __setattr__(self, key, value):
-        if key == '_changed':
-            self.__dict__[key] = value
-            return None
         self.__dict__[key] = value
-        self._changed.append(key)
+        if key != '_changed':
+            self._changed.append(key)
 
     def __delattr__(self, key):
         # self.__dict__.__delattr__(key)
@@ -40,7 +38,7 @@ class DictUpdateWatcher(object):
     def updated_fields(self, pwd=None, ommit=None):
         if not ommit:
             ommit = self._ommit
-        #TODO: refactor
+        # TODO: refactor
         ommit_dict = {}
         for o in ommit:
             ommit_split = o.split('.')
@@ -69,9 +67,9 @@ class DictUpdateWatcher(object):
                             received_values = value.updated_fields(pwd_current, ommit=ommit_dict[key])
                         else:
                             received_values = value.updated_fields(pwd_current)
-                        for received_value in received_values:
-                            if len(received_value.split('.')) > 1 and received_value.split('.')[-2] not in value._changed:
-                                list_.append(received_value)
+                        for _value in received_values:
+                            if len(_value.split('.')) > 1 and _value.split('.')[-2] not in value._changed:
+                                list_.append(_value)
                 else:
                     if key in ommit_dict:
                         list_.extend(value.updated_fields(pwd_current, ommit=ommit_dict[key]))
@@ -124,18 +122,11 @@ class DictUpdateWatcher(object):
 
     def get_dict(self, recursive=True):
         dict_ = copy.deepcopy(self.__dict__)
-        try:
-            del dict_['_value']
-        except:
-            pass
-        try:
-            del dict_['_changed']
-        except:
-            pass
-        try:
-            del dict_['_ommit']
-        except:
-            pass
+        for key in ['_value', '_changed', '_ommit']:
+            try:
+                del dict_[key]
+            except:
+                pass
         if recursive:
             for key, value in dict_.iteritems():
                 if isinstance(value, DictUpdateWatcher):
