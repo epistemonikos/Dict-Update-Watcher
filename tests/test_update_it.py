@@ -130,8 +130,8 @@ class TestDictUpdateWatcher(unittest.TestCase):
         self.assertEqual(['languages.es', 'relations'], received_update)
 
     def test_set_dict_inline(self):
-        self.document.set('info.classification', 'overview')
-        self.assertEqual('overview', self.document.info.classification)
+        self.document.set('info.classification', 'broad-synthesis')
+        self.assertEqual('broad-synthesis', self.document.info.classification)
 
     def test_set_dict_with_unexistent_elements(self):
         self.document.set('otra.saludo', 'hola')
