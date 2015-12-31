@@ -1,4 +1,5 @@
 dict_update_watcher.egg-info
+.eggs/
 *.pyc
 .project
 .pydevproject
