@@ -8,7 +8,7 @@ class DictUpdateWatcher(object):
         self._changed = []
         self._ommit = []
         if isinstance(dict_, dict):
-            for key, value in dict_.iteritems():
+            for key, value in dict_.items():
                 if isinstance(value, dict):
                     setattr(self, key, DictUpdateWatcher(value))
                 else:
@@ -48,7 +48,7 @@ class DictUpdateWatcher(object):
             if to_insert_value:
                 ommit_dict[ommit_split[0]].append(to_insert_value)
         list_ = []
-        for key, value in self.__dict__.iteritems():
+        for key, value in self.__dict__.items():
             if key in ommit_dict and ommit_dict[key] == []:
                 continue
             if key == '_changed' or key == '_ommit':
@@ -128,7 +128,7 @@ class DictUpdateWatcher(object):
             except:
                 pass
         if recursive:
-            for key, value in dict_.iteritems():
+            for key, value in dict_.items():
                 if isinstance(value, DictUpdateWatcher):
                     dict_[key] = value.get_dict(recursive)
                 else:
@@ -151,7 +151,7 @@ class DictUpdateWatcher(object):
         if dict_self_keys != dict_other_keys:
             return 1
         current_cmp_result = 0
-        for key, value in dict_self.iteritems():
+        for key, value in dict_self.items():
             round_value = 1
             if dict_other.get(key, {}) == value:
                 round_value = 0
