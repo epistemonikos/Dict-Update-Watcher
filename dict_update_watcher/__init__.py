@@ -141,13 +141,14 @@ class DictUpdateWatcher(object):
     def values(self):
         return self.get_dict().values()
 
-    def __cmp__(self, other):
+    def __eq__(self, other):
+    # def __cmp__(self, other):
         if not isinstance(other, DictUpdateWatcher):
             return 1
         dict_self = self.__dict__
         dict_other = other.__dict__
-        dict_self_keys = dict_self.keys().sort()
-        dict_other_keys = dict_other.keys().sort()
+        dict_self_keys = sorted(dict_self.keys())
+        dict_other_keys = sorted(dict_other.keys())
         if dict_self_keys != dict_other_keys:
             return 1
         current_cmp_result = 0

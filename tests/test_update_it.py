@@ -55,7 +55,7 @@ class TestDictUpdateWatcher(unittest.TestCase):
         self.document.languages.es = DictUpdateWatcher({'title': 'title'})
         self.document.languages.es.copyright = 'copyright'
         self.document.languages.en.copyright = 'systematic-review'
-        self.assertEqual(['languages.es', 'languages.en.copyright'], self.document.updated_fields())
+        self.assertEqual(['languages.en.copyright', 'languages.es'], sorted(self.document.updated_fields()))
 
     def test_select_field(self):
         self.assertEqual('primary-study', self.document.get('info.classification'))
@@ -76,13 +76,14 @@ class TestDictUpdateWatcher(unittest.TestCase):
 
     def test_get_keys(self):
         received_keys = self.document.keys()
-        received_keys.sort()
+        received_keys = sorted(received_keys)
         self.assertEqual(['id', 'info', 'languages', 'modified'], received_keys)
 
     def test_correct_implementation_of_compare(self):
         # TODO revisar
         document2 = DictUpdateWatcher(self.dict)
-        self.assertEqual(self.document, document2)
+        # import ipdb, pprint; ipdb.set_trace(context=10); pass
+        self.assertEqual(document2, self.document)
 
     def test_get_dict_recursive(self):
         # Testear cuando no tiene dict
