@@ -142,19 +142,15 @@ class DictUpdateWatcher(object):
         return self.get_dict().values()
 
     def __eq__(self, other):
-    # def __cmp__(self, other):
         if not isinstance(other, DictUpdateWatcher):
-            return 1
+            return False
         dict_self = self.__dict__
         dict_other = other.__dict__
         dict_self_keys = sorted(dict_self.keys())
         dict_other_keys = sorted(dict_other.keys())
         if dict_self_keys != dict_other_keys:
-            return 1
-        current_cmp_result = 0
+            return False
         for key, value in dict_self.items():
-            round_value = 1
-            if dict_other.get(key, {}) == value:
-                round_value = 0
-            current_cmp_result += round_value
-        return current_cmp_result
+            if dict_other.get(key, {}) != value:
+                return False
+        return True
