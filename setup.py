@@ -4,7 +4,7 @@ import subprocess
 
 
 GIT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".git")
-CURRENT_TAG = subprocess.check_output(['git', '--git-dir', GIT_PATH, 'tag']).strip().split('\n')[-1]
+CURRENT_TAG = subprocess.check_output(['git', '--git-dir', GIT_PATH, 'tag']).decode('utf-8').strip().split('\n')[-1]
 
 setup(
     name='dict_update_watcher',
