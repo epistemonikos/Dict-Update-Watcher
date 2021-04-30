@@ -75,7 +75,7 @@ class TestDictUpdateWatcher(unittest.TestCase):
         self.assertEqual(self.dict['languages']['en'], self.document.languages.en.get_dict())
 
     def test_get_keys(self):
-        received_keys = self.document.keys()
+        received_keys = list(self.document.keys())
         received_keys.sort()
         self.assertEqual(['id', 'info', 'languages', 'modified'], received_keys)
 
