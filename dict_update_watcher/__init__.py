@@ -157,3 +157,6 @@ class DictUpdateWatcher(object):
                 round_value = 0
             current_cmp_result += round_value
         return current_cmp_result
+
+    def __eq__(self, other):
+        return sorted(self.__dict__.keys()) == sorted(self.__dict__.keys())
