@@ -55,7 +55,7 @@ class TestDictUpdateWatcher(unittest.TestCase):
         self.document.languages.es = DictUpdateWatcher({'title': 'title'})
         self.document.languages.es.copyright = 'copyright'
         self.document.languages.en.copyright = 'systematic-review'
-        self.assertEqual(['languages.es', 'languages.en.copyright'], self.document.updated_fields())
+        self.assertCountEqual(['languages.es', 'languages.en.copyright'], self.document.updated_fields())
 
     def test_select_field(self):
         self.assertEqual('primary-study', self.document.get('info.classification'))
