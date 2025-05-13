@@ -1,3 +1,3 @@
 DIR=`dirname $0`
 cd $DIR
-nosetests -s --with-coverage --cover-package=dict_update_watcher $@
+pytest --capture=tee-sys --tb=short --cov=dict_update_watcher --cov-report=term-missing "${@:1}"
